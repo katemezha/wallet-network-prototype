@@ -26,7 +26,7 @@ Newcomers sending USDT for the first time pick the wrong network because they do
 ## Status
 
 - [x] Hypothesis
-- [ ] Competitive analysis
+- [x] Competitive analysis
 - [ ] Spec
 - [ ] Prototype
 - [ ] Test
