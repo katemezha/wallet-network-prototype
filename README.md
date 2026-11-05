@@ -1,35 +1,33 @@
 # Wallet Network Prototype
- 
-Учебный проект: проверка продуктовой гипотезы с помощью быстрого прототипа.
- 
-## Гипотеза в двух словах
- 
-Новички, которые впервые отправляют USDT, выбирают неверную сеть, потому что не понимают разницы между сетями. Если кошелёк определяет сеть по адресу, а в неоднозначных случаях объясняет, как её уточнить, ошибок станет меньше.
- 
-## Что внутри
- 
-| Документ | Что это |
+
+Validating a product hypothesis with a rapid prototype: helping crypto wallet users choose the right network when sending USDT.
+
+## Hypothesis in brief
+
+Newcomers sending USDT for the first time pick the wrong network because they don't understand the difference between networks. If the wallet detects the network from the address and, in ambiguous cases, explains how to confirm it, fewer people will make mistakes.
+
+## Contents
+
+| Document | Description |
 |---|---|
-| [01 — Гипотеза](docs/01-hypothesis.md) | Карточка гипотезы, метрики, критерий успеха |
-| [02 — Конкурентный анализ](docs/02-competitive-analysis.md) | Как выбор сети устроен у Trust Wallet, Tonkeeper, MetaMask, Binance |
-| 03 — ТЗ прототипа | *в работе* |
-| 04 — План теста | *в работе* |
-| 05 — Результаты | *после теста* |
- 
-## Подход
- 
-- Каждый этап оформляется отдельным pull request: решения и их обоснование остаются в истории репозитория (docs-as-code).
-- Прототип — кликабельная веб-версия экрана отправки в двух вариантах (A/B), без реальных денег и блокчейна.
-- Тест: 10 участников без опыта переводов USDT, сравнительное юзабилити-тестирование.
- 
-## Статус
- 
-- [x] Гипотеза
-- [ ] Конкурентный анализ
-- [ ] ТЗ
-- [ ] Прототип
-- [ ] Тест
-- [ ] Выводы
- 
+| [01 — Hypothesis](docs/01-hypothesis.md) | Hypothesis card, metrics, success criteria |
+| [02 — Competitive analysis](docs/02-competitive-analysis.md) | How network selection works in Trust Wallet, Tonkeeper, MetaMask, Binance |
+| [Backlog](docs/backlog.md) | Hypotheses to validate later |
+| 03 — Prototype spec | *in progress* |
+| 04 — Test plan | *in progress* |
+| 05 — Results | *after testing* |
 
+## Approach
 
+- Each stage is a separate pull request, so decisions and their rationale stay in the repository history (docs-as-code).
+- The prototype is a clickable web version of the send screen in two variants (A/B), with no real money or blockchain.
+- Test: 10 participants with no experience sending USDT, comparative usability testing.
+
+## Status
+
+- [x] Hypothesis
+- [x] Competitive analysis
+- [ ] Spec
+- [ ] Prototype
+- [ ] Test
+- [ ] Results
