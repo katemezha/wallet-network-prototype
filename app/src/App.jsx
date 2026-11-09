@@ -1,6 +1,7 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ADDRESS_FORMAT, detectAddress } from './addressDetection.js'
 import { TASKS } from './config.js'
+import { restoreState, saveState } from './persistence.js'
 import Setup from './screens/Setup.jsx'
 import Start from './screens/Start.jsx'
 import SendForm from './screens/SendForm.jsx'
@@ -21,13 +22,21 @@ const EMPTY_FORM = {
   amount: '',
 }
 
+// Read once per page load, outside the component, so StrictMode's double
+// render doesn't log `session_restored` twice.
+const restored = restoreState()
+
 export default function App() {
-  const [screen, setScreen] = useState('setup')
-  const [session, setSession] = useState(null) // { participant, group, events }
-  const [taskIndex, setTaskIndex] = useState(0)
-  const [form, setForm] = useState(EMPTY_FORM)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [screen, setScreen] = useState(restored?.screen ?? 'setup')
+  const [session, setSession] = useState(restored?.session ?? null) // { participant, group, events }
+  const [taskIndex, setTaskIndex] = useState(restored?.taskIndex ?? 0)
+  const [form, setForm] = useState(restored?.form ?? EMPTY_FORM)
+  const [modalOpen, setModalOpen] = useState(restored?.modalOpen ?? false)
   const pastedRef = useRef(false)
+
+  useEffect(() => {
+    saveState({ screen, session, taskIndex, form, modalOpen })
+  }, [screen, session, taskIndex, form, modalOpen])
 
   const task = TASKS[taskIndex]
   const isLastTask = taskIndex === TASKS.length - 1
