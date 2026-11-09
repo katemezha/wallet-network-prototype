@@ -13,7 +13,7 @@ Newcomers sending USDT for the first time pick the wrong network because they do
 | [01 — Hypothesis](docs/01-hypothesis.md) | Hypothesis card, metrics, success criteria |
 | [02 — Competitive analysis](docs/02-competitive-analysis.md) | How network selection works in Trust Wallet, Tonkeeper, MetaMask, Binance |
 | [Backlog](docs/backlog.md) | Hypotheses to validate later |
-| 03 — Prototype spec | *in progress* |
+| [03 — Prototype spec](docs/03-spec.md) | Screens, A/B differences, event logging, export format |
 | 04 — Test plan | *in progress* |
 | 05 — Results | *after testing* |
 
@@ -23,11 +23,25 @@ Newcomers sending USDT for the first time pick the wrong network because they do
 - The prototype is a clickable web version of the send screen in two variants (A/B), with no real money or blockchain.
 - Test: 10 participants with no experience sending USDT, comparative usability testing.
 
+## Live prototype
+
+https://katemezha.github.io/wallet-network-prototype/
+
+## Run locally
+
+```bash
+cd app
+npm install
+npm run dev
+```
+
+Open http://localhost:5173
+
 ## Status
 
 - [x] Hypothesis
 - [x] Competitive analysis
 - [x] Spec
-- [ ] Prototype
+- [x] Prototype
 - [ ] Test
 - [ ] Results
