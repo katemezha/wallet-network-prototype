@@ -22,8 +22,7 @@ const EMPTY_FORM = {
   amount: '',
 }
 
-// Read once per page load, outside the component, so StrictMode's double
-// render doesn't log `session_restored` twice.
+// Session saved before a page reload, if any.
 const restored = restoreState()
 
 export default function App() {

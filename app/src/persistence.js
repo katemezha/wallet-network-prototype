@@ -3,17 +3,10 @@
 
 const KEY = 'wallet-prototype-session'
 
-// Returns the saved state with a `session_restored` event appended, or null.
 export function restoreState() {
   try {
     const state = JSON.parse(localStorage.getItem(KEY))
-    if (!state?.session) return null
-    const entry = {
-      time: new Date().toISOString(),
-      event: 'session_restored',
-      data: { screen: state.screen },
-    }
-    return { ...state, session: { ...state.session, events: [...state.session.events, entry] } }
+    return state?.session ? state : null
   } catch {
     return null
   }
