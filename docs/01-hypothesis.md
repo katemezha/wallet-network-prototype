@@ -2,12 +2,17 @@
 
 ## Hypothesis
 
+> We believe that **people making their first USDT transfers** choose the wrong network **because they can't match the network named in the recipient's message (e.g. "BEP20") to the network list in their wallet**.
+> If the wallet **detects the network from the address when possible and explains how to match it when not**, more of them will **send to the correct network on the first try**.
+> We'll know we're right when **≥ 80% of participants in version B choose the correct network in the `0x…` task, at least 30 pp more than in version A**.
+
 | | |
 |---|---|
-| **Segment** | Freelancers who have received their first payment in USDT and need to transfer it |
-| **Problem** *(assumption)* | They don't understand the difference between networks, pick the wrong one, and risk losing money |
-| **Solution** | For TRON addresses (`T…`) the network is detected automatically; for `0x…` addresses a clear explanation and choice are shown |
-| **Expected outcome** | Fewer network selection errors, more confidence when sending |
+| **Segment** | People making their first USDT transfers |
+| **Problem** *(assumption)* | They can't match the network named by the recipient to the network list in the wallet, so they choose the wrong network |
+| **Why we believe it** | Trust Wallet community posts about wrong-network transfers; Binance's explicit wrong-network warnings and network confirmation step (see [competitive analysis](02-competitive-analysis.md)) |
+| **Solution** | Detect the network from the address when it's unambiguous (`T…` → TRON); when it's ambiguous (`0x…`), explain how to match the recipient's network before sending |
+| **Expected outcome** | More participants send to the correct network on the first try |
 
 ## Metrics
 
