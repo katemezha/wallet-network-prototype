@@ -1,5 +1,5 @@
 import { ADDRESS_FORMAT, detectAddress } from '../addressDetection.js'
-import { formatUsdt, getNetwork } from '../config.js'
+import { BALANCE, formatUsdt, getNetwork } from '../config.js'
 import TaskCard from './TaskCard.jsx'
 import NetworkSelect from './NetworkSelect.jsx'
 
@@ -19,7 +19,11 @@ export default function SendForm({
   const addressValid = format === ADDRESS_FORMAT.TRON || format === ADDRESS_FORMAT.EVM
   const showAddressError = format === ADDRESS_FORMAT.INVALID && form.addressTouched
   const network = getNetwork(form.network)
-  const amountValid = Number(form.amount) > 0
+  const amount = Number(form.amount)
+  // Amount plus the fee of the selected network (if any) must fit the balance.
+  const total = Number((amount + (network?.fee ?? 0)).toFixed(6))
+  const insufficientBalance = total > BALANCE
+  const amountValid = amount > 0 && !insufficientBalance
   const canContinue = addressValid && network && amountValid
 
   const showDetected =
@@ -78,7 +82,7 @@ export default function SendForm({
         <span className="field-label">Amount</span>
         <div className="input-suffix">
           <input
-            className="input"
+            className={`input ${insufficientBalance ? 'has-error' : ''}`}
             type="number"
             inputMode="decimal"
             min="0"
@@ -89,6 +93,7 @@ export default function SendForm({
           />
           <span className="suffix">USDT</span>
         </div>
+        {insufficientBalance && <span className="error">Insufficient balance</span>}
       </label>
 
       {network && (
