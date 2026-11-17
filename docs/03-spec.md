@@ -56,7 +56,7 @@ Shown at the top of the send form for the current task.
 | Asset | Fixed: USDT (not editable) |
 | Recipient address | Text input, paste allowed |
 | Network | Dropdown, no default value (see "Networks") |
-| Amount | Number input, "Max" not needed |
+| Amount | Number input, "Max" not needed. Error "Insufficient balance" if amount + fee exceeds the balance |
 | Fee | Shown after a network is selected (see "Networks") |
 | **Next** button | Active when address, network and amount are filled |
 
