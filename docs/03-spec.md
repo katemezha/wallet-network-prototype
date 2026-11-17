@@ -18,6 +18,8 @@ The moderator assigns groups manually (5 participants start with A, 5 with B). T
 Setup → Start → [Task 1] Send form → (B: modal) → Review → Sent → Confidence
       → [Task 2] Send form → Review → Sent → Confidence
       → End (results)
+
+B, modal → "Not sure" → Transfer not sent → next task (no confidence question)
 ```
 
 ## Screens
@@ -55,10 +57,10 @@ Shown at the top of the send form for the current task.
 |---|---|
 | Asset | Fixed: USDT (not editable) |
 | Recipient address | Text input, paste allowed |
-| Network | Dropdown, no default value (see "Networks") |
+| Network | Custom dropdown, no default value (see "Networks") |
 | Amount | Number input, "Max" not needed |
 | Fee | Shown after a network is selected (see "Networks") |
-| **Next** button | Active when address, network and amount are filled |
+| **Next** button | Active when the address is valid, a network is selected and the amount is above 0 and not above the balance (error "Insufficient balance" otherwise) |
 
 **Variant A:** static warning under the network field:
 > ⚠️ Make sure the network matches the recipient's network.
@@ -67,7 +69,7 @@ Shown at the top of the send form for the current task.
 
 ### 4. Network confirmation modal (variant B, `0x…` addresses only)
 
-Shown when the participant taps **Next**.
+Shown on every tap of **Next** for a `0x…` address, including after "Change network".
 
 > **Confirm the recipient's network**
 > This address works on several networks. If you choose the wrong one, your money may not arrive.
@@ -79,18 +81,26 @@ Shown when the participant taps **Next**.
 |---|---|
 | Network is correct, continue | → Review |
 | Change network | → Send form, network dropdown opened |
-| Not sure — I'll ask the recipient | → Task ends as "safe abort" |
+| Not sure — I'll ask the recipient | → "Transfer not sent" screen → next task |
+
+"Not sure" ends the task by design: participants who want to reselect use "Change network", so "Not sure" stays a separate signal that the modal explanation wasn't enough.
 
 ### 5. Review
 
 - Amount, network (with standard), recipient address, fee, total
-- Buttons: **Send**, **Back**
+- Buttons: **Send**, **Back** (Back keeps everything entered)
 
 ### 6. Sent
 
 - "Transfer sent" + amount and network
 - The prototype does **not** reveal whether the network was correct.
 - Button: **Continue**
+
+### 6a. Transfer not sent (after "Not sure")
+
+- "Transfer not sent" + short note that the participant chose to check with the recipient
+- Button: **Next task** / **Finish**
+- The confidence question is skipped for this task.
 
 ### 7. Confidence question
 
@@ -101,7 +111,7 @@ Shown when the participant taps **Next**.
 
 - "Thank you!"
 - **Download results** button: saves a file named `participant-{ID}-group-{A|B}.json` with all events and per-task results.
-- **New session** button: returns to the Setup screen for the next participant.
+- **New session** button: returns to the Setup screen. Asks for confirmation if the results haven't been downloaded.
 
 ## Networks
 
@@ -122,15 +132,15 @@ The list is the same in both variants.
 
 | Address format | Detected as | Both variants | Variant B only |
 |---|---|---|---|
-| `T` + 33 base58 characters | TRON | — | TRON preselected, label "✓ Detected from address" under the field; participant can change it |
+| `T` + 33 base58 characters | TRON | — | TRON preselected (only if no network has been chosen yet), label "✓ Detected from address" under the field; participant can change it |
 | `0x` + 40 hex characters | EVM (ambiguous) | — | No preselection; modal on **Next** |
-| Anything else | Invalid | Error: "Invalid address" | — |
+| Anything else | Invalid | Error "Invalid address", shown after a paste or when the field loses focus | — |
 
 **Address/network compatibility is not validated** in either variant: a participant can send to a `T…` address on an EVM network, or to a `0x…` address on TRON. See "Deliberate simplifications".
 
 ## Event logging
 
-Each event is stored with a timestamp during the session and exported with the **Download results** button on the End screen.
+Each event is stored with a timestamp during the session and exported with the **Download results** button on the End screen. Every task event includes `task` in its data, so the summary is built from the log.
 
 | Event | Data |
 |---|---|
@@ -143,6 +153,10 @@ Each event is stored with a timestamp during the session and exported with the *
 | `transfer_sent` | network, amount, correct (yes/no) |
 | `task_aborted` | reason ("safe abort") |
 | `confidence` | score 1–5 |
+
+### Page reload
+
+The session is saved in the browser. A reload brings the participant back to the same screen with the form filled in. Reloads are not recorded in the event log, but they make that task's `time_seconds` longer, so the moderator notes them in the test plan.
 
 ## Export format
 
@@ -185,17 +199,21 @@ The exported file contains a ready-to-use summary per task plus the raw event lo
 | Field | Meaning |
 |---|---|
 | `outcome` | `sent` or `safe_abort` ("Not sure — I'll ask the recipient") |
+| `selected_network` | Network selected when the task ended (also for `safe_abort`) |
 | `correct` | Selected network matches the network in the task; `null` for `safe_abort` |
 | `time_seconds` | From `task_start` to `transfer_sent` (or `task_aborted`) |
 | `network_changes` | How many times the network was changed after the first selection |
-| `modal_action` | `continue`, `change`, `abort`, or `null` if the modal wasn't shown |
+| `modal_action` | Last choice in the modal: `continue`, `change`, `abort`, or `null` if the modal wasn't shown. The full sequence is in `events` |
+| `confidence` | 1–5, or `null` for `safe_abort` |
 
 ## Tech
 
 - Static web app (React + Vite), no backend
-- Hosted on GitHub Pages
-- Desktop and mobile layouts
+- Hosted on GitHub Pages; the build uses relative paths (`base: './'`) so it works from a subfolder
+- Desktop and mobile layouts; on mobile the modal opens as a bottom sheet
+- The network dropdown is a custom component, because the browser's built-in one can't be opened from code reliably on phones ("Change network")
+- Copy works even when a phone opens the dev server over plain http on the local network
 
 ## Deliberate simplifications
 
-**No address/network compatibility check.** Real products (e.g., Binance) usually reject a `T…` address when an EVM network is selected. The prototype intentionally allows this mistake in both variants so that network selection errors can be observed and measured in both tasks. As a result, the error rate in the prototype may be higher than in real products, but the comparison between A and B stays fair because both variants behave the same way.
+**No address/network compatibility check.** Real products often reject a `T…` address when an EVM network is selected. The prototype intentionally allows this mistake in both variants so that network selection errors can be observed and measured in both tasks. As a result, the error rate in the prototype may be higher than in real products, but the comparison between A and B stays fair because both variants behave the same way.
