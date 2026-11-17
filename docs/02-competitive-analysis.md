@@ -1,7 +1,5 @@
 # Competitive Analysis: Network Selection When Sending USDT
 
-> **Note.** The analysis is based on the official documentation of each product. Checking the flows in the apps themselves wasn't possible: the send screen is unavailable with a zero balance.
-
 ## Comparison
 
 | Question | Trust Wallet | Tonkeeper | MetaMask | Binance (app) | Binance (web) |
@@ -21,8 +19,12 @@
 2. Network auto-detection from the address, with a separate confirmation, already exists in the Binance web version. The Binance app doesn't have it.
 3. Only Binance's documentation includes wrong-network warnings.
 4. Tonkeeper and Binance label networks with the standard ("USDT (TRC20)", "BEP20 = BNB Smart Chain").
-5. The Trust Wallet community forum has posts from users who chose the wrong network.
+5. The Trust Wallet community forum has posts from users who chose the wrong network (one example in sources). This shows the problem exists, not how common it is.
 6. Binance explicitly warns against choosing a network based on the lowest fee.
+
+## Method and limitations
+
+The analysis is based on the official documentation of each product. Checking the flows in the apps themselves wasn't possible: the send screen is unavailable with a zero balance.
 
 ## Sources
 
