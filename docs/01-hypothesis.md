@@ -10,7 +10,7 @@
 |---|---|
 | **Segment** | People making their first USDT transfers |
 | **Problem** *(assumption)* | They can't match the network named by the recipient to the network list in the wallet, so they choose the wrong network |
-| **Why we believe it** | Trust Wallet community posts about wrong-network transfers; Binance's explicit wrong-network warnings and network confirmation step (see [competitive analysis](02-competitive-analysis.md)) |
+| **Why we believe it** | User posts about wrong-network transfers; exchanges add explicit wrong-network warnings and a network confirmation step (see [competitive analysis](02-competitive-analysis.md)) |
 | **Solution** | Detect the network from the address when it's unambiguous (`T…` → TRON); when it's ambiguous (`0x…`), explain how to match the recipient's network before sending |
 | **Expected outcome** | More participants send to the correct network on the first try |
 
@@ -26,13 +26,13 @@
 
 Version B ≥ 80% correct sends **and** B − A ≥ 30 pp (primary metric).
 
-The threshold is set before the test. With 10 participants there will be no statistical significance: the result is a signal for a development decision, not proof.
+The threshold is set before the test. It is deliberately high: with 10 participants, only a large difference between versions can be told apart from chance, so a smaller effect would not justify development. With 10 participants there will be no statistical significance: the result is a signal for a development decision, not proof.
 
 ## Versions
 
 | | A (control) | B (test) |
 |---|---|---|
-| Based on | Binance app: address → network chosen manually | Binance web: address → network detected |
+| Flow | Address → network chosen manually | Address → network detected when possible |
 | Network list | With standard labels | With standard labels |
 | Default network | None | For `T…`: TRON, labeled "detected from address" |
 | Hints | Generic warning "Make sure the network matches the recipient's network" | Modal for `0x…` (see below) |
@@ -69,5 +69,5 @@ The addresses are fictional but correctly formatted.
 ## Risks and assumptions
 
 - No real money, so participants are less careful than in real life.
-- Version A must not be artificially worse than real products, otherwise B wins unfairly. That's why A replicates an existing interface (the Binance app).
+- Version A must not be artificially worse than real products, otherwise B wins unfairly. That's why A follows an existing pattern from the competitive analysis: manual network choice with a generic warning.
 - Learning effect: after the first task participants know about networks, so the primary metric is calculated on the first task only.
